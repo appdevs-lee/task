@@ -1,0 +1,144 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/task/kanban.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="kanban-container">
+    <div class="kanban-header">
+        <h1>업무 관리 보드</h1>
+        <a href="{% url 'task_create' %}" class="btn btn-primary" id="create-task-btn">+ 업무 추가</a>
+    </div>
+    
+    <div class="kanban-board">
+        <!-- 진행 전 (TODO) -->
+        <div class="kanban-column" id="todo-column" data-status="todo">
+            <div class="column-header">
+                <h2>진행 전</h2>
+                <span class="task-count">{{ todo_tasks.count }}</span>
+            </div>
+            <div class="column-body">
+                {% for task in todo_tasks %}
+                <div class="task-card" id="task-{{ task.id }}" data-task-id="{{ task.id }}" draggable="true">
+                    <div class="task-header">
+                        <h3>{{ task.title }}</h3>
+                        {% if task.priority > 0 %}
+                        <span class="priority-badge">우선순위: {{ task.priority }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="task-content">
+                        {% if task.description %}
+                        <p class="task-description">{{ task.description|truncatechars:50 }}</p>
+                        {% endif %}
+                        <div class="task-meta">
+                            {% if task.assigned_to %}
+                            <p>담당: {{ task.assigned_to.username }}</p>
+                            {% endif %}
+                            {% if task.due_date %}
+                            <p>마감일: {{ task.due_date|date:"Y-m-d" }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-column-message">업무가 없습니다</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 진행 중 (IN_PROGRESS) -->
+        <div class="kanban-column" id="in-progress-column" data-status="in_progress">
+            <div class="column-header">
+                <h2>진행 중</h2>
+                <span class="task-count">{{ in_progress_tasks.count }}</span>
+            </div>
+            <div class="column-body">
+                {% for task in in_progress_tasks %}
+                <div class="task-card" id="task-{{ task.id }}" data-task-id="{{ task.id }}" draggable="true">
+                    <div class="task-header">
+                        <h3>{{ task.title }}</h3>
+                        {% if task.priority > 0 %}
+                        <span class="priority-badge">우선순위: {{ task.priority }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="task-content">
+                        {% if task.description %}
+                        <p class="task-description">{{ task.description|truncatechars:50 }}</p>
+                        {% endif %}
+                        <div class="task-meta">
+                            {% if task.assigned_to %}
+                            <p>담당: {{ task.assigned_to.username }}</p>
+                            {% endif %}
+                            {% if task.due_date %}
+                            <p>마감일: {{ task.due_date|date:"Y-m-d" }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-column-message">업무가 없습니다</div>
+                {% endfor %}
+            </div>
+        </div>
+        
+        <!-- 완료 (DONE) -->
+        <div class="kanban-column" id="done-column" data-status="done">
+            <div class="column-header">
+                <h2>완료</h2>
+                <span class="task-count">{{ done_tasks.count }}</span>
+            </div>
+            <div class="column-body">
+                {% for task in done_tasks %}
+                <div class="task-card" id="task-{{ task.id }}" data-task-id="{{ task.id }}" draggable="true">
+                    <div class="task-header">
+                        <h3>{{ task.title }}</h3>
+                        {% if task.priority > 0 %}
+                        <span class="priority-badge">우선순위: {{ task.priority }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="task-content">
+                        {% if task.description %}
+                        <p class="task-description">{{ task.description|truncatechars:50 }}</p>
+                        {% endif %}
+                        <div class="task-meta">
+                            {% if task.assigned_to %}
+                            <p>담당: {{ task.assigned_to.username }}</p>
+                            {% endif %}
+                            {% if task.due_date %}
+                            <p>마감일: {{ task.due_date|date:"Y-m-d" }}</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% empty %}
+                <div class="empty-column-message">업무가 없습니다</div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Task Detail Modal -->
+<div class="modal" id="task-detail-modal">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h2 id="modal-title"></h2>
+            <span class="close">&times;</span>
+        </div>
+        <div class="modal-body" id="modal-body">
+            <!-- 상세 내용은 JavaScript로 채워짐 -->
+        </div>
+        <div class="modal-footer">
+            <a href="#" id="edit-task-btn" class="btn btn-secondary">수정</a>
+            <a href="#" id="delete-task-btn" class="btn btn-danger">삭제</a>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="{% static 'js/task/kanban.js' %}"></script>
+{% endblock %}

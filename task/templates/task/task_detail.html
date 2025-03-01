@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="task-detail-container">
+    <h1>{{ task.title }}</h1>
+    
+    <div class="task-info">
+        <p><strong>상태:</strong> {{ task.get_status_display }}</p>
+        <p><strong>우선순위:</strong> {{ task.priority }}</p>
+        {% if task.assigned_to %}
+        <p><strong>담당자:</strong> {{ task.assigned_to.username }}</p>
+        {% endif %}
+        {% if task.due_date %}
+        <p><strong>마감일:</strong> {{ task.due_date|date:"Y-m-d" }}</p>
+        {% endif %}
+        <p><strong>생성일:</strong> {{ task.created_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>마지막 수정일:</strong> {{ task.updated_at|date:"Y-m-d H:i" }}</p>
+        <p><strong>생성자:</strong> {{ task.created_by.username }}</p>
+    </div>
+    
+    <div class="task-description">
+        <h2>설명</h2>
+        <div class="description-content">
+            {% if task.description %}
+            {{ task.description|linebreaks }}
+            {% else %}
+            <p>설명 없음</p>
+            {% endif %}
+        </div>
+    </div>
+    
+    <div class="task-actions">
+        <a href="{% url 'task_update' task.id %}" class="btn btn-primary">수정</a>
+        <a href="{% url 'task_delete' task.id %}" class="btn btn-danger">삭제</a>
+        <a href="{% url 'kanban_board' %}" class="btn btn-secondary">돌아가기</a>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="task-form-container">
+    <h1>{% if task %}업무 수정{% else %}새 업무 추가{% endif %}</h1>
+    
+    <form method="post">
+        {% csrf_token %}
+        
+        <div class="form-group">
+            <label for="{{ form.title.id_for_label }}">제목</label>
+            {{ form.title }}
+            {% if form.title.errors %}
+            <div class="form-error">{{ form.title.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-group">
+            <label for="{{ form.description.id_for_label }}">설명</label>
+            {{ form.description }}
+            {% if form.description.errors %}
+            <div class="form-error">{{ form.description.errors }}</div>
+            {% endif %}
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group half">
+                <label for="{{ form.status.id_for_label }}">상태</label>
+                {{ form.status }}
+                {% if form.status.errors %}
+                <div class="form-error">{{ form.status.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group half">
+                <label for="{{ form.priority.id_for_label }}">우선순위</label>
+                {{ form.priority }}
+                {% if form.priority.errors %}
+                <div class="form-error">{{ form.priority.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-row">
+            <div class="form-group half">
+                <label for="{{ form.due_date.id_for_label }}">마감일</label>
+                {{ form.due_date }}
+                {% if form.due_date.errors %}
+                <div class="form-error">{{ form.due_date.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group half">
+                <label for="{{ form.assigned_to.id_for_label }}">담당자</label>
+                {{ form.assigned_to }}
+                {% if form.assigned_to.errors %}
+                <div class="form-error">{{ form.assigned_to.errors }}</div>
+                {% endif %}
+            </div>
+        </div>
+        
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">저장</button>
+            <a href="{% url 'kanban_board' %}" class="btn btn-secondary">취소</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
